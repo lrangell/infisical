@@ -146,6 +146,9 @@ import { orgRoleServiceFactory } from "@app/services/org/org-role-service";
 import { orgServiceFactory } from "@app/services/org/org-service";
 import { orgAdminServiceFactory } from "@app/services/org-admin/org-admin-service";
 import { orgMembershipDALFactory } from "@app/services/org-membership/org-membership-dal";
+import { loginsDALFactory } from "@app/services/personal-secrets/logins-dal";
+import { loginsServiceFactory } from "@app/services/personal-secrets/logins-service";
+import { personalSecretsServiceFactory } from "@app/services/personal-secrets/personal-secrets-service";
 import { dailyExpiringPkiItemAlertQueueServiceFactory } from "@app/services/pki-alert/expiring-pki-item-alert-queue";
 import { pkiAlertDALFactory } from "@app/services/pki-alert/pki-alert-dal";
 import { pkiAlertServiceFactory } from "@app/services/pki-alert/pki-alert-service";
@@ -1256,6 +1259,10 @@ export const registerRoutes = async (
     externalGroupOrgRoleMappingDAL
   });
 
+  const personalSecretsService = personalSecretsServiceFactory({
+    loginsService: loginsServiceFactory({ loginsDal: loginsDALFactory(db) })
+  });
+
   await superAdminService.initServerCfg();
   //
   // setup the communication with license key server
@@ -1343,7 +1350,8 @@ export const registerRoutes = async (
     slack: slackService,
     workflowIntegration: workflowIntegrationService,
     migration: migrationService,
-    externalGroupOrgRoleMapping: externalGroupOrgRoleMappingService
+    externalGroupOrgRoleMapping: externalGroupOrgRoleMappingService,
+    personalSecrets: personalSecretsService
   });
 
   const cronJobs: CronJob[] = [];

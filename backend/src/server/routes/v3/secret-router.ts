@@ -2202,4 +2202,53 @@ export const registerSecretRouter = async (server: FastifyZodProvider) => {
       return message;
     }
   });
+  server.route({
+    method: "GET",
+    url: "/personal/logins",
+    config: {
+      rateLimit: secretsLimit
+    },
+    schema: {
+      description: "Get personal logins",
+      security: [
+        {
+          bearerAuth: []
+        }
+      ],
+      response: {
+        200: z.array(z.object({ login: z.string(), password: z.string() }))
+      }
+    },
+    onRequest: verifyAuth([AuthMode.JWT]),
+    handler: async (req) => {
+      const passwords = await server.services.personalSecrets.logins.list({ userId: req.permission.id });
+      return passwords;
+    }
+  });
+  server.route({
+    method: "POST",
+    url: "/personal/logins",
+    config: {
+      rateLimit: secretsLimit
+    },
+    schema: {
+      description: "Get personal logins",
+      security: [
+        {
+          bearerAuth: []
+        }
+      ],
+      body: z.object({ login: z.string(), plainTextPassword: z.string() }),
+      response: {
+        200: z.void()
+      }
+    },
+
+    onRequest: verifyAuth([AuthMode.JWT]),
+    handler: async (req) => {
+      const { login, plainTextPassword } = req.body;
+      const userId = req.permission.id;
+      await server.services.personalSecrets.logins.create({ login, plainTextPassword, userId });
+    }
+  });
 };

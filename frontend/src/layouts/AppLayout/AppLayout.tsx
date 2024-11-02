@@ -809,6 +809,16 @@ export const AppLayout = ({ children }: LayoutProps) => {
                           </MenuItem>
                         </a>
                       </Link>
+                      <Link href={`/org/${currentOrg?.id}/user-secrets`} passHref>
+                        <a>
+                          <MenuItem
+                            isSelected={router.asPath === `/org/${currentOrg?.id}/user-secrets`}
+                            icon="system-outline-109-slider-toggle-settings"
+                          >
+                            User Secrets
+                          </MenuItem>
+                        </a>
+                      </Link>
                     </Menu>
                   )}
                 </div>
