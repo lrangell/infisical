@@ -15,5 +15,9 @@ export const loginsDALFactory = (db: TDbClient) => {
     return passwords;
   };
 
-  return { ...loginOrm, create, list };
+  const deleteLogin = async (id: string): Promise<void> => {
+    await db(TableName.PersonalPasswords).where({ id }).del();
+  };
+
+  return { ...loginOrm, create, list, deleteLogin };
 };

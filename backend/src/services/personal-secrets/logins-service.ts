@@ -22,17 +22,21 @@ export const loginsServiceFactory = ({ loginsDal }: LoginsDeps) => {
 
   const list = async ({ userId }: { userId: string }) => {
     const passwords = await loginsDal.list(userId);
-    const decryptedPasswords = passwords.map(({ encryptedPassword, iv, tag, login, encoding }) => {
+    const decryptedPasswords = passwords.map(({ encryptedPassword, iv, tag, login, encoding, id }) => {
       const password = infisicalSymmetricDecrypt({
         keyEncoding: encoding as SecretKeyEncoding,
         ciphertext: encryptedPassword.toString(encoding as BufferEncoding),
         iv: iv.toString(encoding as BufferEncoding),
         tag: tag.toString(encoding as BufferEncoding)
       });
-      return { login, password };
+      return { login, password, id };
     });
     return decryptedPasswords;
   };
 
-  return { create, list };
+  const deleteLogin = async ({ id }: { id: string }) => {
+    await loginsDal.deleteLogin(id);
+  };
+
+  return { create, list, deleteLogin };
 };
