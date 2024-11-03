@@ -170,6 +170,9 @@ import {
   TOrgRoles,
   TOrgRolesInsert,
   TOrgRolesUpdate,
+  TPersonalPasswords,
+  TPersonalPasswordsInsert,
+  TPersonalPasswordsUpdate,
   TPkiAlerts,
   TPkiAlertsInsert,
   TPkiAlertsUpdate,
@@ -817,6 +820,11 @@ declare module "knex/types/tables" {
       TExternalGroupOrgRoleMappings,
       TExternalGroupOrgRoleMappingsInsert,
       TExternalGroupOrgRoleMappingsUpdate
+    >;
+    [TableName.PersonalPasswords]: KnexOriginal.CompositeTableType<
+      TPersonalPasswords,
+      TPersonalPasswordsInsert,
+      TPersonalPasswordsUpdate
     >;
   }
 }

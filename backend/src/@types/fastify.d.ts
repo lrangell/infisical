@@ -58,6 +58,7 @@ import { TIntegrationAuthServiceFactory } from "@app/services/integration-auth/i
 import { TOrgRoleServiceFactory } from "@app/services/org/org-role-service";
 import { TOrgServiceFactory } from "@app/services/org/org-service";
 import { TOrgAdminServiceFactory } from "@app/services/org-admin/org-admin-service";
+import { TPersonalSecretsServiceFactory } from "@app/services/personal-secrets/personal-secrets-service";
 import { TPkiAlertServiceFactory } from "@app/services/pki-alert/pki-alert-service";
 import { TPkiCollectionServiceFactory } from "@app/services/pki-collection/pki-collection-service";
 import { TProjectServiceFactory } from "@app/services/project/project-service";
@@ -189,6 +190,7 @@ declare module "fastify" {
       cmek: TCmekServiceFactory;
       migration: TExternalMigrationServiceFactory;
       externalGroupOrgRoleMapping: TExternalGroupOrgRoleMappingServiceFactory;
+      personalSecrets: TPersonalSecretsServiceFactory;
     };
     // this is exclusive use for middlewares in which we need to inject data
     // everywhere else access using service layer

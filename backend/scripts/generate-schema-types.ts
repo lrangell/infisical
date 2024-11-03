@@ -10,7 +10,7 @@ dotenv.config({
 
 const db = knex({
   client: "pg",
-  connection: process.env.DB_CONNECTION_URI
+  connection: "postgresql://infisical:infisical@localhost/infisical"
 });
 
 const getZodPrimitiveType = (type: string) => {
