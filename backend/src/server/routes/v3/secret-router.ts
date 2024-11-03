@@ -2221,7 +2221,6 @@ export const registerSecretRouter = async (server: FastifyZodProvider) => {
     },
     onRequest: verifyAuth([AuthMode.JWT]),
     handler: async (req) => {
-      console.log({ id: req.permission.id });
       const passwords = await server.services.personalSecrets.logins.list({ userId: req.permission.id });
       return passwords;
     }
@@ -2275,6 +2274,30 @@ export const registerSecretRouter = async (server: FastifyZodProvider) => {
     handler: async (req) => {
       const { id } = req.body;
       await server.services.personalSecrets.logins.deleteLogin({ id });
+    }
+  });
+  server.route({
+    method: "PATCH",
+    url: "/personal/logins",
+    config: {
+      rateLimit: secretsLimit
+    },
+    schema: {
+      description: "Edit personal login",
+      security: [
+        {
+          bearerAuth: []
+        }
+      ],
+      body: z.object({ id: z.string(), login: z.string(), plainTextPassword: z.string() }),
+      response: {
+        200: z.void()
+      }
+    },
+
+    onRequest: verifyAuth([AuthMode.JWT]),
+    handler: async (req) => {
+      await server.services.personalSecrets.logins.edit(req.body);
     }
   });
 };

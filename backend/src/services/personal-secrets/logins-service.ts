@@ -38,5 +38,16 @@ export const loginsServiceFactory = ({ loginsDal }: LoginsDeps) => {
     await loginsDal.deleteLogin(id);
   };
 
-  return { create, list, deleteLogin };
+  const edit = async ({ login, plainTextPassword, id }: { id: string } & CreateLoginParams) => {
+    const { ciphertext, iv, tag, encoding } = infisicalSymmetricEncypt(plainTextPassword);
+    await loginsDal.create({
+      login,
+      encryptedPassword: Buffer.from(ciphertext, "utf8"),
+      iv: Buffer.from(iv, encoding),
+      tag: Buffer.from(tag, encoding),
+      id
+    });
+  };
+
+  return { create, list, deleteLogin, edit };
 };

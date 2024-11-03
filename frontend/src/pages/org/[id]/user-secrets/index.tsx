@@ -7,13 +7,33 @@ import { OrgPermissionActions, OrgPermissionSubjects } from "@app/context";
 import { withPermission } from "@app/hoc";
 import { usePopUp } from "@app/hooks";
 import { AddLoginModal } from "@app/views/personal/Logins/AddLoginModal";
+import { EditLoginModal } from "@app/views/personal/Logins/EditLoginModal";
 
 type Login = { login: string; password: string; id: string };
 
-const LoginItem = ({ login, trigger }: { login: Login; trigger: Function }) => {
+const LoginItem = ({
+  login,
+  trigger,
+  edit
+}: {
+  login: Login;
+  trigger: Function;
+  edit: Function;
+}) => {
   return (
     <Tr>
       <Td>{login.login}</Td> <Td>{login.password}</Td>
+      <Td>
+        <Button
+          colorSchema="secondary"
+          onClick={() => {
+            edit();
+            trigger();
+          }}
+        >
+          Edit
+        </Button>
+      </Td>
       <Td>
         <Button
           colorSchema="danger"
@@ -34,6 +54,7 @@ const UserSecrets = withPermission(
     const [passwords, setPasswords] = useState([]);
     const [rerenderhack, trigger] = useState(true);
     const { popUp, handlePopUpToggle, handlePopUpOpen } = usePopUp(["createLogin"] as const);
+    const editPopup = usePopUp(["editLogin"] as const);
 
     useEffect(() => {
       const get = async () => {
@@ -64,6 +85,10 @@ const UserSecrets = withPermission(
               Add
             </Button>
             <AddLoginModal popUp={popUp} handlePopUpToggle={handlePopUpToggle} />
+            <EditLoginModal
+              popUp={editPopup.popUp}
+              handlePopUpToggle={editPopup.handlePopUpToggle}
+            />
 
             <TableContainer className="mt-4 w-full">
               <Table>
@@ -71,6 +96,7 @@ const UserSecrets = withPermission(
                   <Tr>
                     <Th>Login</Th>
                     <Th>Pasword</Th>
+                    <Th>Edit</Th>
                     <Th>Delete</Th>
                   </Tr>
                 </THead>
@@ -80,6 +106,7 @@ const UserSecrets = withPermission(
                       login={login}
                       key={login.id}
                       trigger={() => trigger(!rerenderhack)}
+                      edit={() => editPopup.handlePopUpOpen("editLogin")}
                     />
                   ))}
                 </TBody>

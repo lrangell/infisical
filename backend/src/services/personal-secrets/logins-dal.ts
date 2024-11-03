@@ -1,5 +1,10 @@
 import { TDbClient } from "@app/db";
-import { TableName, TPersonalPasswords, TPersonalPasswordsInsert } from "@app/db/schemas";
+import { TableName } from "@app/db/schemas";
+import {
+  TPersonalPasswords,
+  TPersonalPasswordsInsert,
+  TPersonalPasswordsUpdate
+} from "@app/db/schemas/personal-passwords";
 import { ormify } from "@app/lib/knex";
 
 export type LoginsDal = ReturnType<typeof loginsDALFactory>;
@@ -18,6 +23,9 @@ export const loginsDALFactory = (db: TDbClient) => {
   const deleteLogin = async (id: string): Promise<void> => {
     await db(TableName.PersonalPasswords).where({ id }).del();
   };
+  const edit = async (data: TPersonalPasswordsUpdate) => {
+    await db(TableName.PersonalPasswords).update(data);
+  };
 
-  return { ...loginOrm, create, list, deleteLogin };
+  return { ...loginOrm, create, list, deleteLogin, edit };
 };
